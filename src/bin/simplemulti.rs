@@ -6,9 +6,12 @@ fn main() {
     let listener = TcpListener::bind("localhost:30000").unwrap();
 
     let (connection, _) = listener.accept().unwrap();
-    if let Err(e) = handle_connection(connection) {
-        println!("failed to handle the connection : {e} co");
-    }
+
+    std::thread::spawn(|| {
+        if let Err(e) = handle_connection(connection) {
+            println!("failed to handle the connection : {e} co");
+        }
+    });
 }
 
 fn handle_connection(mut connection: TcpStream) -> io::Result<()> {
